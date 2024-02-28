@@ -2,8 +2,12 @@
 
 int main() {
     char nome[50];
-    int horas_trabalhadas, num_dependentes;
-    float salario_bruto, salario_liquido, desconto_inss, desconto_ir;
+    int horas_trabalhadas;
+    int num_dependentes;
+    float salario_bruto;
+    float salario_liquido;
+    float desconto_inss;
+    float desconto_ir;
 
     // Solicita as informações do usuário
     printf("Digite o nome do funcionario: ");

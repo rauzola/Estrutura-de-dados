@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/www/Faculdade/ESTRUTURA DE DADOS/ESTRUTURA-DE-DADOS",
-      "program": "c:/www/Faculdade/ESTRUTURA DE DADOS/ESTRUTURA-DE-DADOS/build/Debug/outDebug",
+      "cwd": "c:/www/Faculdade/ESTRUTURA-DE-DADOS",
+      "program": "c:/www/Faculdade/ESTRUTURA-DE-DADOS/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
