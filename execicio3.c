@@ -1,7 +1,11 @@
 #include <stdio.h>
 
 int main() {
-    float litros_combustivel, km_percorridos, custo_litro_combustivel, total_gasto_combustivel, consumo_medio;
+    float litros_combustivel;
+    float km_percorridos;
+    float custo_litro_combustivel;
+    float total_gasto_combustivel;
+    float consumo_medio;
 
     // Solicita ao usuário as entradas necessárias
     printf("Digite os litros de combustivel gastos: ");
