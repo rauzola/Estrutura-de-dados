@@ -10,13 +10,13 @@ int main() {
     float desconto_ir;
 
     // Solicita as informações do usuário
-    printf("Digite o nome do funcionario: ");
+    printf("Digite o nome do funcionario...................: ");
     scanf("%s", nome);
     
-    printf("Digite o numero de horas trabalhadas: ");
+    printf("Digite o numero de horas trabalhadas...........: ");
     scanf("%d", &horas_trabalhadas);
     
-    printf("Digite o numero de dependentes: ");
+    printf("Digite o numero de dependentes.................: ");
     scanf("%d", &num_dependentes);
 
     // Calcula o salário bruto
@@ -30,11 +30,11 @@ int main() {
     salario_liquido = salario_bruto - desconto_inss - desconto_ir;
 
     // Apresenta os resultados
-    printf("\nNome: %s\n", nome);
-    printf("Salario bruto: R$ %.2f\n", salario_bruto);
-    printf("Desconto INSS: R$ %.2f\n", desconto_inss);
-    printf("Desconto IR: R$ %.2f\n", desconto_ir);
-    printf("Salario liquido: R$ %.2f\n", salario_liquido);
+    printf("\nNome...........................................: %s\n", nome);
+    printf("Salario bruto..................................: R$ %.2f\n", salario_bruto);
+    printf("Desconto INSS..................................: R$ %.2f\n", desconto_inss);
+    printf("Desconto IR....................................: R$ %.2f\n", desconto_ir);
+    printf("Salario liquido................................: R$ %.2f\n", salario_liquido);
 
     return 0;
 }

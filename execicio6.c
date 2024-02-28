@@ -15,16 +15,16 @@ int main() {
     float lucro_liquido;
 
     // Solicita as informações do usuário
-    printf("Digite o numero de empregados da loja: ");
+    printf("Digite o numero de empregados da loja....................: ");
     scanf("%d", &num_empregados);
 
-    printf("Digite o valor do salario minimo: ");
+    printf("Digite o valor do salario minimo.........................: ");
     scanf("%f", &salario_minimo);
 
-    printf("Digite o preco de custo de cada bicicleta: ");
+    printf("Digite o preco de custo de cada bicicleta................: ");
     scanf("%f", &preco_custo_bicicleta);
 
-    printf("Digite o numero de bicicletas vendidas: ");
+    printf("Digite o numero de bicicletas vendidas...................: ");
     scanf("%d", &num_bicicletas_vendidas);
 
     // Calcula o salário final de cada empregado
@@ -40,8 +40,8 @@ int main() {
     lucro_liquido = lucro_bruto - (num_empregados * salario_vendedor) - comissao_total;
 
     // Apresenta os resultados
-    printf("\nSalario final de cada empregado: R$ %.2f\n", salario_final_empregado);
-    printf("Lucro liquido da loja: R$ %.2f\n", lucro_liquido);
+    printf("\nSalario final de cada empregado..........................: R$ %.2f\n", salario_final_empregado);
+    printf("Lucro liquido da loja....................................: R$ %.2f\n", lucro_liquido);
 
     return 0;
 }
