@@ -76,6 +76,6 @@ O programa lê o número de empregados da loja, o valor do salário mínimo, o p
 
 **Autor:** Raul Sigoli
 
-**Data:** 27/02/2024
+**Data:** 28/02/2024
 
 Este repositório contém os códigos-fonte em linguagem C das soluções propostas para os exercícios mencionados acima. Cada questão está contida em seu próprio arquivo, nomeado de acordo com o número da questão.
