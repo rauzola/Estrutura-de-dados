@@ -2,7 +2,13 @@
 
 int main() {
     float preco_combustivel = 5.24;
-    float marcacao_inicial, marcacao_final, litros_combustivel, valor_recebido;
+    float marcacao_inicial;
+    float marcacao_final;
+    float litros_combustivel;
+    float valor_recebido;
+    float quilometros_percorridos;
+    float lucro_liquido;
+    float media_consumo;
 
     // Solicita as informações do usuário
     printf("Digite a marcacao do odometro inicial (em Km): ");
@@ -18,13 +24,13 @@ int main() {
     scanf("%f", &valor_recebido);
 
     // Calcula a quantidade de quilometros percorridos no dia
-    float quilometros_percorridos = marcacao_final - marcacao_inicial;
+    quilometros_percorridos = marcacao_final - marcacao_inicial;
 
     // Calcula o lucro liquido do dia
-    float lucro_liquido = valor_recebido - (litros_combustivel * preco_combustivel);
+    lucro_liquido = valor_recebido - (litros_combustivel * preco_combustivel);
 
     // Calcula a media do consumo em Km/L
-    float media_consumo = quilometros_percorridos / litros_combustivel;
+    media_consumo = quilometros_percorridos / litros_combustivel;
 
     // Apresenta os resultados
     printf("\nMarcacao do odometro inicial: %.2f Km\n", marcacao_inicial);
