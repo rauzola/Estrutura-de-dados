@@ -1,8 +1,18 @@
 #include <stdio.h>
 
 int main() {
-    int num_empregados, num_bicicletas_vendidas;
-    float salario_minimo, preco_custo_bicicleta;
+    int num_empregados;
+    int num_bicicletas_vendidas;
+    float salario_minimo;
+    float preco_custo_bicicleta;
+    float salario_vendedor;
+    float comissao_por_bicicleta;
+    float comissao_total;
+    float comissao_por_empregado;
+    float salario_final_empregado;
+    float preco_venda_bicicleta;
+    float lucro_bruto;
+    float lucro_liquido;
 
     // Solicita as informações do usuário
     printf("Digite o numero de empregados da loja: ");
@@ -18,16 +28,16 @@ int main() {
     scanf("%d", &num_bicicletas_vendidas);
 
     // Calcula o salário final de cada empregado
-    float salario_vendedor = 2 * salario_minimo;
-    float comissao_por_bicicleta = preco_custo_bicicleta * 0.15;
-    float comissao_total = comissao_por_bicicleta * num_bicicletas_vendidas;
-    float comissao_por_empregado = comissao_total / num_empregados;
-    float salario_final_empregado = salario_vendedor + comissao_por_empregado;
+    salario_vendedor = 2 * salario_minimo;
+    comissao_por_bicicleta = preco_custo_bicicleta * 0.15;
+    comissao_total = comissao_por_bicicleta * num_bicicletas_vendidas;
+    comissao_por_empregado = comissao_total / num_empregados;
+    salario_final_empregado = salario_vendedor + comissao_por_empregado;
 
     // Calcula o lucro líquido da loja
-    float preco_venda_bicicleta = preco_custo_bicicleta * 1.5;
-    float lucro_bruto = preco_venda_bicicleta * num_bicicletas_vendidas;
-    float lucro_liquido = lucro_bruto - (num_empregados * salario_vendedor) - comissao_total;
+    preco_venda_bicicleta = preco_custo_bicicleta * 1.5;
+    lucro_bruto = (preco_venda_bicicleta * num_bicicletas_vendidas) -(preco_custo_bicicleta * num_bicicletas_vendidas);
+    lucro_liquido = lucro_bruto - (num_empregados * salario_vendedor) - comissao_total;
 
     // Apresenta os resultados
     printf("\nSalario final de cada empregado: R$ %.2f\n", salario_final_empregado);
