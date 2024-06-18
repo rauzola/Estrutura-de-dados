@@ -981,136 +981,317 @@ void consultaCodigo(TipoLista *L)
 }
 
 
-
-
-
-
 // Funcoes final
 
 
-void MeuProduto(){
+// Função para cadastrar movimentação de estoque
+void cadastrarMov(TipoLista *L, TipoLista_mov *M)
+{
+    TipoApontador_mov P; // Ponteiro para novo elemento na lista de movimentações
+    TipoApontador aux1; // Ponteiro auxiliar para pesquisa na lista de produtos
+    reg_produto reg_prod; // Estrutura para dados do produto
+    reg_movimentacao reg_mov; // Estrutura para dados da movimentação
+    int resp; // Variável para resposta do usuário
 
-    TipoLista L;
-    L.primeiro= NULL;
-    L.ultimo= NULL;
-    int opc;
-    system("color 1F");
-    setlocale(LC_ALL, "portuguese-brazilian");
-    // le_arquivo(&L);
+    do
+    {
+        tela(); // Limpa a tela e redefine os cabeçalhos
+        TelaMov(); // Exibe a tela específica para movimentação de estoque
+        gotoxy(40, 3);
+        printf("CADASTRAR MOVIMENTAÇÃO");
 
-    do {
-        tela();
-        gotoxy(30, 03);
-        printf("MENU PRINCIPAL");
-        gotoxy(20, 8);
-        printf("1 - Cadastrar Cliente no final da Lista");
-        gotoxy(20, 9);
-        printf("2 - Cadastrar Cliente no Inicio da Lista");
-        gotoxy(20, 10);
-        printf("3 - Cadastrar Cliente em uma Possicao da Lista");
-        gotoxy(20, 11);
-        printf("4 - Remover Cliente no Final da Lista");
-        gotoxy(20, 12);
-        printf("5 - Remover Cliente na Posicao da Lista");
-        gotoxy(20, 13);
-        printf("6 - Remover Cliente no Inicio da Lista");
-        gotoxy(20, 14);
-        printf("7 - Consultar Todos Cliente");
-        gotoxy(20, 15);
-        printf("8 - Alterar dados do Cliente");
-        gotoxy(20, 16);
-        printf("9 - Finalizar Programa");
-        gotoxy(8, 23);
-        printf("Digite sua opcao.:");
-        gotoxy(28, 23);
-        scanf("%d", &opc);
-
-        switch(opc){
-            case 1: {
-                Cadastrar();
-                break;
-            }
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            case 5:
-                break;
-            case 6:
-                break;
-            case 7:
-                break;
-            case 8:
-                break;
-            case 9:
-                break;
-            default:
-                gotoxy(20, 23);
-                printf("Opcao Invalida");
-                break;
+        // Solicita e verifica se o código do produto existe na lista
+        gotoxy(37, 6);
+        printf("                                      ");
+        gotoxy(37, 6);
+        scanf("%d", &reg_prod.cd_produto);
+        gotoxy(40, 6);
+        printf("-");
+        aux1 = pesquisa(L, reg_prod.cd_produto);
+        if (aux1 == NULL)
+        {
+            gotoxy(8, 29);
+            printf("               ");
+            gotoxy(8, 29);
+            printf("Produto não Cadastrado");
+            getch(); // Aguarda o usuário pressionar uma tecla
+            gotoxy(8, 29);
+            printf("               ");
         }
+    } while (aux1 == NULL); // Repete enquanto o código do produto não estiver cadastrado
 
-        
-    } while(opc = 9);
+    // Leitura dos dados da movimentação
+    reg_prod = aux1->conteudo; // Obtém os dados do produto encontrado
+    reg_mov.cd_prod_mov = reg_prod.cd_produto; // Define o código do produto na movimentação
+    gotoxy(42, 6);
+    printf("%s", reg_prod.nm_produto);
+    fflush(stdin);
+    gotoxy(37, 8);
+    fgets(reg_mov.dt_mov, 11, stdin); // Lê a data da movimentação
+    fflush(stdin);
+    gotoxy(37, 10);
+    scanf("%s", reg_mov.tp_mov); // Lê o tipo de movimentação (E - entrada, S - saída)
+    fflush(stdin);
+    gotoxy(37, 12);
+    scanf("%f", &reg_mov.qt_mov); // Lê a quantidade movimentada
+    fflush(stdin);
+    gotoxy(37, 14);
+    scanf("%f", &reg_mov.vl_unit_mov); // Lê o valor unitário da movimentação
 
+    // Calcula o valor total da movimentação
+    reg_mov.vl_total_mov = reg_mov.qt_mov * reg_mov.vl_unit_mov;
+    fflush(stdin);
+    gotoxy(37, 16);
+    printf("%.2f", reg_mov.vl_total_mov);
+
+    // Atualiza a quantidade e valores do produto baseado no tipo de movimentação
+    if (strcmp(reg_mov.tp_mov, "E") == 0) // Se for entrada
+    {
+        reg_prod.qtd_produto += reg_mov.qt_mov; // Atualiza a quantidade total
+        reg_prod.vl_total += reg_mov.vl_total_mov; // Atualiza o valor total
+        reg_prod.vl_CustoMedio = reg_prod.vl_total / reg_prod.qtd_produto; // Recalcula o custo médio
+        reg_mov.customed_mov = reg_prod.vl_CustoMedio; // Define o custo médio na movimentação
+        reg_mov.vl_final = reg_prod.vl_CustoMedio * reg_prod.qtd_produto; // Calcula o valor final
+        reg_mov.qtd_estoque = reg_prod.qtd_produto; // Define a quantidade atualizada no registro de movimentação
+        aux1->conteudo = reg_prod; // Atualiza os dados do produto na lista principal
+    }
+    else // Se for saída
+    {
+        reg_prod.qtd_produto -= reg_mov.qt_mov; // Atualiza a quantidade total
+        reg_prod.vl_total -= reg_mov.vl_total_mov; // Atualiza o valor total
+        reg_mov.customed_mov = reg_prod.vl_CustoMedio; // Define o custo médio na movimentação
+        reg_mov.vl_final = reg_prod.vl_CustoMedio * reg_prod.qtd_produto; // Calcula o valor final
+        reg_mov.qtd_estoque = reg_prod.qtd_produto; // Define a quantidade atualizada no registro de movimentação
+        aux1->conteudo = reg_prod; // Atualiza os dados do produto na lista principal
+    }
+
+    // Mostra a quantidade atualizada na tela
+    fflush(stdin);
+    gotoxy(22, 23);
+    printf("%6.2f", reg_prod.qtd_produto);
+    gotoxy(42, 23);
+    printf("%6.2f", reg_prod.vl_CustoMedio);
+    gotoxy(66, 23);
+    printf("%6.2f", reg_prod.vl_total);
+
+    // Pergunta ao usuário se deseja salvar os dados da movimentação
+    gotoxy(8, 29);
+    printf("Deseja gravar os dados (1-SIM; 2-NAO)..:");
+    scanf("%d", &resp);
+    if (resp == 1) // Se o usuário escolher SIM
+    {
+        P = (TipoApontador_mov)malloc(sizeof(TipoItem_mov)); // Aloca memória para o novo item de movimentação
+        P->conteudo_mov = reg_mov; // Atribui os dados da movimentação ao novo item
+
+        // Verifica se a lista de movimentações está vazia
+        if (M->Primeiro_mov == NULL)
+        {
+            M->Primeiro_mov = P; // Define o novo item como o primeiro da lista
+            M->Primeiro_mov->proximo_mov = NULL;
+            M->Ultimo_mov = M->Primeiro_mov; // Define o novo item como o último da lista
+        }
+        else
+        {
+            P->proximo_mov = M->Primeiro_mov; // Insere o novo item no início da lista
+            M->Primeiro_mov = P; // Atualiza o primeiro item da lista para o novo item
+        }
+    }
 }
 
-void MovEstoque(){
+// Função para consultar movimentações de estoque
+void ConsultaMov(TipoLista *L, TipoLista_mov *M)
+{
+    TipoApontador_mov P; // Ponteiro para percorrer a lista de movimentações
+    TipoApontador aux1; // Ponteiro auxiliar para pesquisa na lista de produtos
+    reg_movimentacao reg_mov; // Estrutura para dados da movimentação
+    reg_produto reg_prod; // Estrutura para dados do produto
+    int resp; // Variável para resposta do usuário
+    int aux; // Variável auxiliar para controle do loop
+    int lin; // Variável para controle da linha na tela
 
-    TipoLista L;
-    L.primeiro= NULL;
-    L.ultimo= NULL;
-    int opc;
-    system("color 1F");
-    setlocale(LC_ALL, "portuguese-brazilian");
-    // le_arquivo(&L);
-
-    do {
-        tela();
-        gotoxy(30, 03);
-        printf("MENU PRINCIPAL");
-        gotoxy(20, 8);
-        printf("1 - Consultar Fichario do Produto");
-        gotoxy(20, 9);
-        printf("2 - Consultar em Ordem de Codigo");
-        gotoxy(20, 10);
-        printf("3 - Consultar em Ordem Alfabetica");
-        gotoxy(20, 11);
-        printf("4 - Consultar o Codigo Especifico");
-        gotoxy(20, 12);
-        printf("5 - Retornar Menu Principal");
-       
-        gotoxy(8, 23);
-        printf("Digite sua opcao.:");
-        gotoxy(28, 23);
-        scanf("%d", &opc);
-
-        switch(opc){
-            case 1: {
-                Consultar();
-                break;
-            }
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            case 5:
-                    main();
-                break;
-           
-            default:
-                gotoxy(20, 23);
-                printf("Opcao Invalida");
-                break;
+    do
+    {
+        tela(); // Limpa a tela e redefine os cabeçalhos
+        gotoxy(40, 3);
+        printf("CONSULTAR MOVIMENTAÇÃO");
+        telaConsMov(); // Exibe a tela específica para consulta de movimentação
+        lin = 7;
+        gotoxy(10, 5);
+        scanf("%d", &reg_prod.cd_produto);
+        aux = 0;
+        aux1 = pesquisa(L, reg_prod.cd_produto); // Busca o produto na lista principal
+        if (aux1 == NULL)
+        {
+            gotoxy(8, 29);
+            printf("               ");
+            gotoxy(8, 29);
+            printf("Produto não Cadastrado");
+            getch(); // Aguarda o usuário pressionar uma tecla
+            gotoxy(8, 29);
+            printf("               ");
         }
+        else
+        {
+            reg_prod = aux1->conteudo; // Obtém os dados do produto encontrado
+            gotoxy(42, 6);
+            printf("%s", reg_prod.nm_produto);
+            aux = 1; // Define que o produto foi encontrado e pode sair do loop
+        }
+    } while (aux != 1); // Repete enquanto o produto não estiver cadastrado
 
-        
-    } while(opc = 9);
+    P = M->Primeiro_mov; // Inicia a partir do primeiro elemento da lista de movimentações
+    while (P != NULL)
+    {
+        reg_mov = P->conteudo_mov; // Obtém os dados da movimentação
+        if (reg_mov.cd_prod_mov == reg_prod.cd_produto) // Verifica se a movimentação é do produto consultado
+        {
+            lin = lin + 2; // Avança duas linhas para cada movimentação exibida
+            gotoxy(2, lin);
+            printf("%s", reg_mov.dt_mov); // Exibe a data da movimentação
+            gotoxy(12, lin);
+            printf("%s", reg_mov.tp_mov); // Exibe o tipo de movimentação (E - entrada, S - saída)
+            gotoxy(21, lin);
+            printf("%6.2f", reg_mov.qt_mov); // Exibe a quantidade movimentada
+            gotoxy(31, lin);
+            printf("%6.2f", reg_mov.vl_unit_mov); // Exibe o valor unitário da movimentação
+            gotoxy(42, lin);
+            printf("%6.2f", reg_mov.vl_total_mov); // Exibe o valor total da movimentação
+            gotoxy(54, lin);
+            printf("%6.2f", reg_mov.qtd_estoque); // Exibe a quantidade de estoque após a movimentação
+            gotoxy(64, lin);
+            printf("%6.2f", reg_mov.customed_mov); // Exibe o custo médio após a movimentação
+            gotoxy(74, lin);
+            printf("%6.2f", reg_mov.vl_final); // Exibe o valor final do estoque após a movimentação
+        }
+        P = P->proximo_mov; // Avança para o próximo elemento da lista de movimentações
+    }
 
+    // Pergunta ao usuário se deseja gravar os dados da consulta
+    gotoxy(8, 29);
+    printf("Deseja gravar os dados (1 - SIM; 2 - NAO)..: ");
+    scanf("%d", &resp);
+}
+
+
+
+// Função do Submenu para Consultar Produto
+void menu_consultar(TipoLista *L)
+{
+    int opc; // Variável para armazenar a opção do usuário
+
+    do
+    {
+        tela(); // Limpa a tela e redefine os cabeçalhos
+        gotoxy(40, 3);
+        printf("CONSULTAR PRODUTO");
+        gotoxy(20, 8);
+        printf("1 - Consultar Fichário do Produto Geral"); // Opção 1: Consulta geral do fichário
+        gotoxy(20, 9);
+        printf("2 - Consultar em Ordem de Código"); // Opção 2: Consulta ordenada por código
+        gotoxy(20, 10);
+        printf("3 - Consultar em Ordem Alfabética"); // Opção 3: Consulta ordenada alfabeticamente
+        gotoxy(20, 11);
+        printf("4 - Consultar Código Específico"); // Opção 4: Consulta por código específico
+        gotoxy(20, 12);
+        printf("5 - Retornar ao Menu Principal"); // Opção 5: Retorna ao menu principal
+        gotoxy(8, 23);
+        printf("Digite sua opção..:"); // Solicita ao usuário que insira a opção
+        scanf("%d", &opc); // Lê a opção do usuário
+
+        switch (opc)
+        {
+            case 1:
+                consultarFichario(L); // Chama a função para consultar o fichário geral
+                break;
+
+            case 2:
+                ordenarCodigo(L); // Chama a função para consultar produtos em ordem de código
+                break;
+
+            case 3:
+                consultarOrdemNome(L); // Chama a função para consultar produtos em ordem alfabética
+                break;
+
+            case 4:
+                consultaCodigo(L); // Chama a função para consultar um produto específico pelo código
+                break;
+
+            default:
+                break; // Se a opção for 5 ou outra fora do escopo, sai do switch
+        }
+    } while (opc < 5); // Repete o loop enquanto a opção for menor que 5
+}
+
+// Menu de Produto
+void MenuProduto(TipoLista *L)
+{
+    int opc; // Variável para armazenar a opção do usuário
+
+    do
+    {
+        tela(); // Limpa a tela e redefine os cabeçalhos
+        gotoxy(30, 3);
+        printf("MENU PRODUTO");
+        gotoxy(20, 8);
+        printf("1 - Cadastrar Produto no Início da Lista"); // Opção 1: Cadastrar produto no início da lista
+        gotoxy(20, 9);
+        printf("2 - Cadastrar Produto no Final da Lista"); // Opção 2: Cadastrar produto no final da lista
+        gotoxy(20, 10);
+        printf("3 - Cadastrar Produto em uma Posição da Lista"); // Opção 3: Cadastrar produto em uma posição específica
+        gotoxy(20, 11);
+        printf("4 - Remover Produto no Início da Lista"); // Opção 4: Remover produto do início da lista
+        gotoxy(20, 12);
+        printf("5 - Remover Produto no Final da Lista"); // Opção 5: Remover produto do final da lista
+        gotoxy(20, 13);
+        printf("6 - Remover Produto na Posição da Lista"); // Opção 6: Remover produto de uma posição específica
+        gotoxy(20, 14);
+        printf("7 - Consultar todos os Produtos"); // Opção 7: Consultar todos os produtos
+        gotoxy(20, 15);
+        printf("8 - Alterar dados do Produto"); // Opção 8: Alterar dados de um produto
+        gotoxy(20, 16);
+        printf("9 - Retornar ao Menu Principal"); // Opção 9: Retornar ao menu principal
+        gotoxy(8, 23);
+        printf("Digite sua opção..:"); // Solicita ao usuário que insira a opção
+        scanf("%d", &opc); // Lê a opção do usuário
+
+        switch (opc)
+        {
+            case 1:
+                cadastrarInicio(L); // Chama a função para cadastrar produto no início da lista
+                break;
+
+            case 2:
+                cadastrarFinal(L); // Chama a função para cadastrar produto no final da lista
+                break;
+
+            case 3:
+                cadastrarPosicao(L); // Chama a função para cadastrar produto em uma posição específica
+                break;
+
+            case 4:
+                removerInicio(L); // Chama a função para remover produto do início da lista
+                break;
+
+            case 5:
+                removerFinal(L); // Chama a função para remover produto do final da lista
+                break;
+
+            case 6:
+                removerPosicao(L); // Chama a função para remover produto de uma posição específica
+                break;
+
+            case 7:
+                menu_consultar(L); // Chama o submenu para consultar produtos
+                break;
+
+            case 8:
+                alterarProduto(L); // Chama a função para alterar os dados de um produto
+                break;
+
+            default:
+                break; // Se a opção for 9 ou outra fora do escopo, sai do switch
+        }
+    } while (opc < 9); // Repete o loop enquanto a opção for menor que 9
 }
 
 
@@ -1180,53 +1361,6 @@ void ConsultarMovimentacao(){
 }
 
 
-void MenuMovEstoque(){
-
-    TipoLista L;
-    L.primeiro= NULL;
-    L.ultimo= NULL;
-    int opc;
-    system("color 1F");
-    setlocale(LC_ALL, "portuguese-brazilian");
-    // le_arquivo(&L);
-
-    do {
-        tela();
-       gotoxy(20, 10);
-        printf("1 - Cadastra Movimentacao de Estoque");
-        gotoxy(20, 12);
-        printf("2 - Lista Movimentacao de Estoque");
-        gotoxy(20, 14);
-        printf("3 - Retornar ao Menu Principal");
-       
-
-        gotoxy(8, 23);
-        printf("Digite sua opcao.:");
-        gotoxy(28, 23);
-        scanf("%d", &opc);
-
-        switch(opc){
-            case 1: {
-                CadastrarMovmentacao();
-                break;
-            }
-            case 2:
-                break;
-            case 3:
-                main();
-                break;
-            
-           
-            default:
-                gotoxy(20, 23);
-                printf("Opcao Invalida");
-                break;
-        }
-
-        
-    } while(opc = 9);
-
-}
 
 // Tela de movimentacao
 void MovmentacaoTela(){
@@ -1262,50 +1396,62 @@ void MovmentacaoTela(){
 
 
 
-    int main(){
+  // Função Principal
+int main()
+{
+    int opc; // Variável para armazenar a opção do usuário
+    TipoLista L; // Lista de produtos
+    TipoLista_mov M; // Lista de movimentações de estoque
 
-    TipoLista L;
-    L.primeiro= NULL;
-    L.ultimo= NULL;
-    int opc;
-    system("color 1F");
+    // Inicializa a lista de produtos
+    L.Primeiro = NULL;
+    L.Ultimo = NULL;
+
+    // Inicializa a lista de movimentações de estoque
+    M.Primeiro_mov = NULL;
+    M.Ultimo_mov = NULL;
+
+    // Define o local para o português brasileiro
     setlocale(LC_ALL, "portuguese-brazilian");
+
+    // Leitura de arquivo (comentado)
     // le_arquivo(&L);
 
-    do {
-        tela();
-        gotoxy(30, 03);
+    // Loop para exibição do menu principal até o usuário escolher finalizar
+    do
+    {
+        tela(); // Limpa a tela e redefine os cabeçalhos
+        gotoxy(42, 03);
         printf("MENU PRINCIPAL");
         gotoxy(20, 10);
-        printf("1 - Menu Cadastro de Produto");
+        printf("1 - Menu Cadastro de Produto"); // Opção 1: Menu de Cadastro de Produto
         gotoxy(20, 12);
-        printf("2 - Menu Movimentacao de Estoque");
+        printf("2 - Menu Movimentação de Estoque"); // Opção 2: Menu de Movimentação de Estoque
         gotoxy(20, 14);
-        printf("3 - Finalizar Programa");
+        printf("3 - Finalizar o Programa"); // Opção 3: Finalizar o Programa
         gotoxy(8, 23);
-        printf("Digite sua opcao.:");
-        gotoxy(28, 23);
-        scanf("%d", &opc);
+        printf("Digite sua opção..:"); // Solicita ao usuário que insira a opção
+        scanf("%d", &opc); // Lê a opção do usuário
 
-       switch (opc){
-        case 1: {
-            MeuProduto();
-            break;
+        // Executa a função correspondente à opção escolhida pelo usuário
+        switch (opc)
+        {
+            case 1:
+                MenuProduto(&L); // Chama o menu de cadastro de produto
+                break;
+
+            case 2:
+                MovEstoque(&L, &M); // Chama o menu de movimentação de estoque
+                break;
+
+            default:
+                break; // Se a opção for 3 ou outra fora do escopo, sai do switch
         }
-        case 2:
-            MenuMovEstoque();
-            break;
-        case 3:
-            break;
-        default:
-            gotoxy(20, 23);
-            printf("Opcao Invalida");
-            break;
-       }
 
-        
-    } while(opc = 9);
+    } while (opc < 3); // Repete o loop enquanto a opção for menor que 3 (diferente de "Finalizar o Programa")
 
-    return 0;
+    // Grava os dados no arquivo (comentado)
+    // gravar(&L);
 
+    return 0; // Retorna 0 indicando que o programa foi executado com sucesso
 }
