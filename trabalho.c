@@ -1100,7 +1100,9 @@ void cadastrarMov(TipoLista *L, TipoLista_mov *M)
 
 // Função para consultar movimentações de estoque
 // Declaração da função no início do arquivo
-void telaConsMov();
+void telaConsMov();  /// chat gpt
+void telaProduto();  /// chat gpt
+void telaconsulta(); /// chat gpt
 
 // Função para consulta de movimentação de estoque
 void ConsultaMov(TipoLista *L, TipoLista_mov *M)
