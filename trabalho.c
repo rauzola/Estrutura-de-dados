@@ -1099,6 +1099,10 @@ void cadastrarMov(TipoLista *L, TipoLista_mov *M)
 }
 
 // Função para consultar movimentações de estoque
+// Declaração da função no início do arquivo
+void telaConsMov();
+
+// Função para consulta de movimentação de estoque
 void ConsultaMov(TipoLista *L, TipoLista_mov *M)
 {
     TipoApontador_mov P;      // Ponteiro para percorrer a lista de movimentações
@@ -1170,6 +1174,20 @@ void ConsultaMov(TipoLista *L, TipoLista_mov *M)
     gotoxy(8, 29);
     printf("Deseja gravar os dados (1 - SIM; 2 - NAO)..: ");
     scanf("%d", &resp);
+}
+
+// Implementação da função telaConsMov
+void telaConsMov()
+{
+    tela();
+    gotoxy(30, 03);
+    printf("Consultar Produto");
+    gotoxy(01, 04);
+    printf("+------------------------------------------------------------------------------+\n");
+    gotoxy(02, 05);
+    printf("Data | Tipo   | Quant | VL.Unit | VL.Total  | Quant.Estoque | Custo.Medio ");
+    gotoxy(01, 06);
+    printf("+--- ------------------------ ------ ------------ ------- --------- -----------+\n");
 }
 
 // Função para o menu de movimentação de estoque
@@ -1378,19 +1396,6 @@ void Consultar()
 }
 
 // Consultar Movimentacao Tela
-void telaConsMov()
-{
-
-    tela();
-    gotoxy(30, 03);
-    printf("Consultar Produto");
-    gotoxy(01, 04);
-    printf("+------------------------------------------------------------------------------+\n");
-    gotoxy(02, 05);
-    printf("Data | Tipo   | Quant | VL.Unit | VL.Total  | Quant.Estoque | Custo.Medio ");
-    gotoxy(01, 06);
-    printf("+--- ------------------------ ------ ------------ ------- --------- -----------+\n");
-}
 
 // Tela de movimentacao
 void MovmentacaoTela()
@@ -1422,107 +1427,6 @@ void MovmentacaoTela()
     printf("|             |              |             |");
     gotoxy(14, 19);
     printf("+-------------+--------------+-------------+");
-}
-
-// Função para leitura de arquivo
-void lerArquivo(TipoLista *L)
-{
-    FILE *ptr;                       // Ponteiro para o arquivo
-    char *filename = "Produtos.dat"; // Nome do arquivo
-    char *moda_gravacao = "rb";      // Modo de leitura binária
-    reg_produto reg_prod;            // Estrutura para armazenar os dados do produto
-    TipoApontador P;                 // Ponteiro para os itens da lista
-
-    L->Primeiro = NULL; // Inicializa a lista como vazia
-    L->Ultimo = NULL;   // Inicializa a lista como vazia
-    tela();             // Limpa a tela e redefine os cabeçalhos
-    gotoxy(40, 03);
-    printf("LER PRODUTOS EM DISCO");
-
-    // Abre o arquivo, se houver erro ao abrir, exibe mensagem e retorna
-    ptr = fopen(filename, moda_gravacao);
-    if (ptr == NULL)
-    {
-        gotoxy(8, 29);
-        printf("Erro ao abrir o arquivo");
-        getch();
-    }
-    else
-    {
-        gotoxy(8, 29);
-        while (!feof(ptr)) // Enquanto não chegar ao fim do arquivo
-        {
-            if (fread(&reg_prod, sizeof(reg_produto), 1, ptr) != 0) // Lê o próximo registro
-            {
-                // Se a lista estiver vazia, inicializa o primeiro item
-                if (L->Primeiro == NULL)
-                {
-                    P = (TipoApontador)malloc(sizeof(TipoItem));
-                    P->conteudo = reg_prod;
-                    P->proximo = NULL;
-                    L->Primeiro = P;
-                    L->Ultimo = P;
-                }
-                else // Caso contrário, adiciona o item ao final da lista
-                {
-                    P->proximo = (TipoApontador)malloc(sizeof(TipoItem));
-                    P = P->proximo;
-                    P->conteudo = reg_prod;
-                    P->proximo = NULL;
-                    L->Ultimo = P;
-                }
-            }
-        }
-        fclose(ptr); // Fecha o arquivo
-    }
-}
-
-// Função para gravar a lista em arquivo
-void gravar(TipoLista *L)
-{
-    FILE *ptr;                       // Ponteiro para o arquivo
-    char *filename = "Produtos.dat"; // Nome do arquivo
-    char *moda_gravacao = "wb";      // Modo de escrita binária
-    reg_produto reg_prod;            // Estrutura para armazenar os dados do produto
-    TipoApontador p = L->Primeiro;   // Ponteiro para percorrer a lista
-
-    tela(); // Limpa a tela e redefine os cabeçalhos
-    gotoxy(40, 03);
-    printf("GRAVAR PRODUTOS EM DISCO");
-    if (p == NULL) // Se a lista estiver vazia, exibe mensagem e retorna
-    {
-        gotoxy(8, 29);
-        printf("                                  ");
-        gotoxy(8, 29);
-        printf("Lista Vazia");
-        getch();
-    }
-    else
-    {
-        // Abre o arquivo, se houver erro ao abrir, exibe mensagem e retorna
-        if ((ptr = fopen(filename, moda_gravacao)) == NULL)
-        {
-            gotoxy(8, 29);
-            printf("                                       ");
-            gotoxy(8, 29);
-            printf("Erro ao abrir o arquivo");
-            getch();
-        }
-        else
-        {
-            // Percorre a lista e grava cada item no arquivo
-            while (p != NULL)
-            {
-                reg_prod = p->conteudo;
-                fwrite(&reg_prod, sizeof(reg_produto), 1, ptr);
-                p = p->proximo;
-            }
-            fclose(ptr); // Fecha o arquivo
-            gotoxy(8, 29);
-            printf("Produtos gravados com sucesso");
-            getch();
-        }
-    }
 }
 
 // Função Principal
