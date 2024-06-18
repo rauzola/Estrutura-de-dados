@@ -1,32 +1,65 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
 #include <locale.h>
+#include <string.h>
 
-typedef struct {
-    int cd_cliente;
-    int nm_cliente;
-    int ds_endereco;
-    int nr_numero;
-    int nr_documento;
-    int ds_cidade;
-    int cd_uf;
-    int dt_cadastro;
-    int nr_telefone;
-} reg_cliente;
+// Dados produto
+typedef struct
+{
+    int cd_produto;
+    char nm_produto[50];
+    char und_produto[03];
+    char dt_validade[11];
+    float qtd_produto;
+    float vl_CustoMedio;
+    float vl_total;
+} reg_produto;
 
 typedef struct TipoItem *TipoApontador;
 
-typedef struct TipoItem {
-    reg_cliente conteudo;
+typedef struct TipoItem
+{
+    reg_produto conteudo;
     TipoApontador proximo;
-} TipoItem ;
+} TipoItem;
 
-typedef struct {
-    TipoApontador primeiro;
-    TipoApontador ultimo;
+typedef struct
+{
+    TipoApontador Primeiro;
+    TipoApontador Ultimo;
 } TipoLista;
+
+// Dados movimentação estoque
+typedef struct
+{
+    char dt_mov[11];
+    int cd_prod_mov;
+    char tp_mov[7];
+    float qt_mov;
+    float vl_unit_mov;
+    float vl_total_mov;
+    float qtd_estoque;
+    float customed_mov;
+    float vl_final;
+} reg_movimentacao;
+
+typedef struct TipoItem_mov *TipoApontador_mov;
+
+typedef struct TipoItem_mov
+{
+    TipoApontador_mov anterior_mov;
+    reg_movimentacao conteudo_mov;
+    TipoApontador proximo_mov;
+} TipoItem_mov;
+
+typedef struct
+{
+    TipoApontador_mov Primeiro_mov;
+    TipoApontador_mov Ultimo_mov;
+} TipoLista_mov;
 
 void gotoxy(int x, int y)
 {
@@ -72,7 +105,10 @@ void tela()
     printf("+------------------------------------------------------------------------------+\n");
 }
 
-int MeuProduto(){
+// Funcoes
+
+
+void MeuProduto(){
 
     TipoLista L;
     L.primeiro= NULL;
@@ -141,7 +177,7 @@ int MeuProduto(){
 
 }
 
-int MovEstoque(){
+void MovEstoque(){
 
     TipoLista L;
     L.primeiro= NULL;
@@ -197,17 +233,11 @@ int MovEstoque(){
 
 }
 
-int Cadastrar(){
 
-    TipoLista L;
-    L.primeiro= NULL;
-    L.ultimo= NULL;
-    int opc;
-    system("color 1F");
-    setlocale(LC_ALL, "portuguese-brazilian");
-    // le_arquivo(&L);
 
-    do {
+// Tela Cadastra Produto
+void CadastrarProduto(){
+
         tela();
         gotoxy(30, 03);
         printf("Cadastrar Produto");
@@ -236,86 +266,41 @@ int Cadastrar(){
         gotoxy(14, 19);
         printf("+-------------+--------------+--------+");
 
-        gotoxy(8, 23);
-        printf("Digite sua opcao.:");
-        gotoxy(28, 23);
-        scanf("%d", &opc);
-
-        switch(opc){
-            case 1: {
-                //Menu_produto(&L);
-                break;
-            }
-            case 2:
-                break;
-            case 3:
-                break;
-            
-           
-            default:
-                gotoxy(20, 23);
-                printf("Opcao Invalida");
-                break;
-        }
-
-        
-    } while(opc = 9);
-
 }
 
 
-int Consultar(){
+// Consultar Tela
+void Consultar(){
 
-    TipoLista L;
-    L.primeiro= NULL;
-    L.ultimo= NULL;
-    int opc;
-    system("color 1F");
-    setlocale(LC_ALL, "portuguese-brazilian");
-    // le_arquivo(&L);
-
-    do {
         tela();
         gotoxy(30, 03);
         printf("Consultar Produto");
         gotoxy(01, 04);
         printf("+------------------------------------------------------------------------------+\n");
         gotoxy(02, 05);
-        printf("CD | Descricao do Produto   | Uind | Data Valid | Qtde  | VL.Unit | VL Total");
+        printf("ID | Descricao do Produto   | Uind | Data Valid | Qtde  | VL.Unit | VL Total");
         gotoxy(01, 06);
         printf("+--- ------------------------ ------ ------------ ------- --------- -----------+\n");
         
-       
+}
 
-        gotoxy(8, 23);
-        printf("Digite sua opcao.:");
-        gotoxy(28, 23);
-        scanf("%d", &opc);
+// Consultar Movimentacao Tela
+void ConsultarMovimentacao(){
 
-        switch(opc){
-            case 1: {
-                //Menu_produto(&L);
-                break;
-            }
-            case 2:
-                break;
-            case 3:
-                break;
-            
-           
-            default:
-                gotoxy(20, 23);
-                printf("Opcao Invalida");
-                break;
-        }
-
+        tela();
+        gotoxy(30, 03);
+        printf("Consultar Produto");
+        gotoxy(01, 04);
+        printf("+------------------------------------------------------------------------------+\n");
+        gotoxy(02, 05);
+        printf("Data | Tipo   | Quant | VL.Unit | VL.Total  | Quant.Estoque | Custo.Medio ");
+        gotoxy(01, 06);
+        printf("+--- ------------------------ ------ ------------ ------- --------- -----------+\n");
         
-    } while(opc = 9);
-
 }
 
 
-int MenuMovEstoque(){
+void MenuMovEstoque(){
 
     TipoLista L;
     L.primeiro= NULL;
@@ -363,18 +348,9 @@ int MenuMovEstoque(){
 
 }
 
-
-int CadastrarMovmentacao(){
-
-    TipoLista L;
-    L.primeiro= NULL;
-    L.ultimo= NULL;
-    int opc;
-    system("color 1F");
-    setlocale(LC_ALL, "portuguese-brazilian");
-    // le_arquivo(&L);
-
-    do {
+// Tela de movimentacao
+void MovmentacaoTela(){
+   
         tela();
         gotoxy(30, 03);
         printf("Cadastrar Movimentacao");
@@ -401,31 +377,6 @@ int CadastrarMovmentacao(){
         printf("|             |              |             |");
         gotoxy(14, 19);
         printf("+-------------+--------------+-------------+");
-
-        gotoxy(8, 23);
-        printf("Digite sua opcao.:");
-        gotoxy(28, 23);
-        scanf("%d", &opc);
-
-        switch(opc){
-            case 1: {
-                //Menu_produto(&L);
-                break;
-            }
-            case 2:
-                break;
-            case 3:
-                break;
-            
-           
-            default:
-                gotoxy(20, 23);
-                printf("Opcao Invalida");
-                break;
-        }
-
-        
-    } while(opc = 9);
 
 }
 
