@@ -1,3 +1,8 @@
+/*
+Autor.....: Raul Sigoi
+Data......: 10/06/2024
+Objetivo..: Sistema de Controle de Estoques - Trabalho Final
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
